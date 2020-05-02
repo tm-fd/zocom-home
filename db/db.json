@@ -3,7 +3,7 @@
     {
       "id": "VAC1",
       "type": "Vacuum",
-      "name": "Fann Damm",
+      "name": "BB-8s slow cousin",
       "on": false,
       "state": "cleaning"
     },
@@ -20,7 +20,7 @@
       "id": "LIG2",
       "type": "Light",
       "name": "Living room",
-      "on": true,
+      "on": false,
       "color": "#FFDE67",
       "brightness": 1,
       "state": "off"
@@ -37,7 +37,7 @@
     {
       "id": "BLI1",
       "type": "Blind",
-      "name": "Livingroom",
+      "name": "Living room",
       "on": false,
       "state": "up"
     },
@@ -52,7 +52,7 @@
     {
       "id": "LOC1",
       "type": "Lock",
-      "name": "Ytterdörr",
+      "name": "Front door",
       "locked": false,
       "secret": "19d493b3-9a2e-495e-9dc2-44b7836dae9a",
       "code": "1234"
@@ -60,9 +60,19 @@
     {
       "id": "CAM1",
       "type": "Camera",
-      "name": "Ytterdörr",
-      "on" : true,
+      "name": "Front door",
+      "on" : false,
       "secret": "a5e337f5-a391-4fda-894e-d14aba719c9e"
+    },
+    {
+      "id": "SPE1",
+      "type": "Speaker",
+      "name": "Living room",
+      "on" : false,
+      "stream": { 
+        "file" : "testfile.mp3",
+        "name" : "testfile"
+      }
     }
   ],
   "categories": [
