@@ -80,7 +80,8 @@
     "Light",
     "AC",
     "Blind",
-    "Vacuum"
+    "Vacuum",
+    "Speaker"
   ],
   "keys": []
 }
