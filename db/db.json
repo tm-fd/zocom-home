@@ -22,7 +22,7 @@
       "name": "Living room",
       "on": false,
       "color": "#FFDE67",
-      "brightness": 1,
+      "brightness": 0.5,
       "state": "off"
     },
     {
