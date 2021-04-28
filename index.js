@@ -2,7 +2,6 @@ const { app } = require("./core");
 const { db, update } = require("./db");
 const Joi = require("joi");
 
-
 app.listen(3000, () => {
   console.log("API for smart home 1.1 up n running.");
 });
@@ -10,75 +9,52 @@ app.listen(3000, () => {
 /* CODE YOUR API HERE */
 
 const controlDevice = (id) => {
-
   const device = db.get("devices").find({ id: id }).value();
-  
+
   return device;
-
 };
-
-
 
 app.get("/devices", (req, res) => {
   res.send(db);
 });
 
-
-
 app.get("/devices/:type/:id/switch", (req, res) => {
+  let updatedDevice = controlDevice(req.params.id);
 
-    let updatedDevice = controlDevice(req.params.id);
+  if (req.params.type !== "Lock" && req.params.type === updatedDevice.type) {
+    updatedDevice.on = !updatedDevice.on;
 
-    if (req.params.type !== "Lock" && req.params.type === updatedDevice.type) {
-
-            updatedDevice.on = !updatedDevice.on;
-
-            if (updatedDevice.on === true) {
-
-            res.send(` ${updatedDevice.type} is on`);
-
-            } else {
-
-            res.send(` ${updatedDevice.type} is off`);
-
-            }
-
+    if (updatedDevice.on === true) {
+      res.send(` ${updatedDevice.type} is on`);
     } else {
+      res.send(` ${updatedDevice.type} is off`);
+    }
+  } else {
+    updatedDevice.locked = !updatedDevice.locked;
 
-            updatedDevice.locked = !updatedDevice.locked;
-
-            if (updatedDevice.locked === true) {
-
-            res.send(` ${updatedDevice.type} is on`);
-
-            } else {
-
-            res.send(` ${updatedDevice.type} is off`);
-
-            } 
-        }
+    if (updatedDevice.locked === true) {
+      res.send(` ${updatedDevice.type} is on`);
+    } else {
+      res.send(` ${updatedDevice.type} is off`);
+    }
+  }
 });
 
-app.put('/devices/:id', (req, res) => {
-    let updatedDevice = controlDevice(req.params.id);
+app.put("/devices/:id", (req, res) => {
+  let updatedDevice = controlDevice(req.params.id);
 
-    if (!updatedDevice) res.status(400).send('the device not found')
+  if (!updatedDevice) res.status(400).send("the device not found");
 
-    const { error } = validateInput(req.body)
-    if(error) return res.status(400).send(error.details[0].message)
-    
-    
-    updatedDevice.on = req.body.on
-    updatedDevice.brightness = req.body.brightness
-    updatedDevice.color = req.body.color
-    updatedDevice.locked = req.body.locked
+  const { error } = validateInput(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
+  updatedDevice.on = req.body.on;
+  updatedDevice.brightness = req.body.brightness;
+  updatedDevice.color = req.body.color;
+  updatedDevice.locked = req.body.locked;
 
-
-
-    res.send(updatedDevice)
-
-})
+  res.send(updatedDevice);
+});
 
 function validateInput(device) {
   // "npm i joi" install joi validation
@@ -86,7 +62,7 @@ function validateInput(device) {
     on: Joi.boolean(),
     brightness: Joi.number(),
     color: Joi.string().min(4),
-    locked: Joi.boolean()
+    locked: Joi.boolean(),
   });
   return schema.validate(device);
 }
