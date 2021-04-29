@@ -17,6 +17,7 @@ const controlDevice = (id) => {
    return device
 };
 
+
 const controlLock = () => {
   state = !state;
   let lock = db.get("devices").find({ id: 'LOC1' }).assign({locked : state}).value();
@@ -24,11 +25,14 @@ const controlLock = () => {
   return lock
 };
 
-app.get("/:type/:id/switch", (req, res) => {
+
+// All devices 
+app.get("/:type/:id/switching", (req, res) => {
   
   let updatedDevice = req.params.type === 'Lock' ? controlLock() : controlDevice(req.params.id);
 
-  if (!updatedDevice || req.params.type !== updatedDevice.type) res.status(400).send("the device not found");
+  if (!updatedDevice) res.status(400).send("the device not found");
+  if(req.params.type !== updatedDevice.type) res.status(400).send("The device type not valid");
 
   state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
   
