@@ -8,45 +8,43 @@ app.listen(3000, () => {
 
 /* CODE YOUR API HERE */
 
+let state = false;
+
 const controlDevice = (id) => {
-  const device = db.get("devices").find({ id: id }).value();
-  return device;
+   state = !state;
+   let device = db.get("devices").find({ id: id }).assign({on : state}).value();
+   update()
+   return device
 };
 
-app.get("/devices", (req, res) => {
-  res.send(db);
+const controlLock = () => {
+  state = !state;
+  let lock = db.get("devices").find({ id: 'LOC1' }).assign({locked : state}).value();
+  update()
+  return lock
+};
+
+app.get("/:type/:id/switch", (req, res) => {
+  
+  let updatedDevice = req.params.type === 'Lock' ? controlLock() : controlDevice(req.params.id);
+
+  if (!updatedDevice || req.params.type !== updatedDevice.type) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
 });
 
-app.get("/devices/:type/:id/switch", (req, res) => {
-  let updatedDevice = controlDevice(req.params.id);
-
-  if (req.params.type !== "Lock" && req.params.type === updatedDevice.type) {
-    updatedDevice.on = !updatedDevice.on;
-
-    if (updatedDevice.on === true) {
-      res.send(` ${updatedDevice.type} is on`);
-    } else {
-      res.send(` ${updatedDevice.type} is off`);
-    }
-  } else {
-    updatedDevice.locked = !updatedDevice.locked;
-
-    if (updatedDevice.locked === true) {
-      res.send(` ${updatedDevice.type} is on`);
-    } else {
-      res.send(` ${updatedDevice.type} is off`);
-    }
-  }
-});
 
 
 // You can also control the devices by input the wished value
-app.put("/devices/:id", (req, res) => {
-  let updatedDevice = controlDevice(req.params.id);
+app.put("/:type/:id", (req, res) => {
 
-  if (!updatedDevice) res.status(400).send("the device not found");
+  let updatedDevice = db.get("devices").find({ id: req.params.id }).value();
+  
 
-// Validaring user input 
+  if (!updatedDevice || req.params.type !== updatedDevice.type) res.status(400).send("the device not found");
+
+// Validating user input 
   const { error } = validateInput(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -58,11 +56,13 @@ app.put("/devices/:id", (req, res) => {
   // for the door lock
   updatedDevice.locked = req.body.locked;
 
+  update()
+
   res.send(updatedDevice);
 });
 
+// Validating function using Joi validation module
 function validateInput(device) {
-  // "npm i joi" install joi validation
   const schema = Joi.object({
     on: Joi.boolean(),
     brightness: Joi.number(),
@@ -71,3 +71,4 @@ function validateInput(device) {
   });
   return schema.validate(device);
 }
+
