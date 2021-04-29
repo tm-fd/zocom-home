@@ -10,7 +10,6 @@ app.listen(3000, () => {
 
 const controlDevice = (id) => {
   const device = db.get("devices").find({ id: id }).value();
-
   return device;
 };
 
@@ -40,17 +39,23 @@ app.get("/devices/:type/:id/switch", (req, res) => {
   }
 });
 
+
+// You can also control the devices by input the wished value
 app.put("/devices/:id", (req, res) => {
   let updatedDevice = controlDevice(req.params.id);
 
   if (!updatedDevice) res.status(400).send("the device not found");
 
+// Validaring user input 
   const { error } = validateInput(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
+  // All devices except the Lock  
   updatedDevice.on = req.body.on;
+  // for the lights
   updatedDevice.brightness = req.body.brightness;
   updatedDevice.color = req.body.color;
+  // for the door lock
   updatedDevice.locked = req.body.locked;
 
   res.send(updatedDevice);
