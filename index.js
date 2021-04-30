@@ -28,10 +28,12 @@ const controlLock = () => {
 
 // All devices 
 app.get("/:type/:id/switching", (req, res) => {
+
   
   let updatedDevice = req.params.type === 'Lock' ? controlLock() : controlDevice(req.params.id);
 
   if (!updatedDevice) res.status(400).send("the device not found");
+
   if(req.params.type !== updatedDevice.type) res.status(400).send("The device type not valid");
 
   state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
@@ -40,6 +42,96 @@ app.get("/:type/:id/switching", (req, res) => {
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/ac/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlDevice(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/blind/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlDevice(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/light/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlDevice(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/camera/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlDevice(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+app.get("/lock/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlLock(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/vacuum/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlDevice(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/speaker/:id/onOff", (req, res) => {
+  
+  let updatedDevice = controlDevice(req.params.id);
+
+  if (!updatedDevice) res.status(400).send("the device not found");
+
+  state ? res.send(` ${updatedDevice.type} is on`) : res.send(` ${updatedDevice.type} is off`);
+  
+});
+
+
+
+/////////////////////////////////////////////////////////////////////////
 // You can also control the devices by input the wished value
 app.put("/:type/:id", (req, res) => {
 
